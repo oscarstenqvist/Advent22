@@ -1,24 +1,19 @@
 file = open("input.txt", "r")
 lines = file.readlines()
 
-elfList = [0]*len(lines)
-elfIndex = 0
-elf1Cal = 0
-elf2Cal = 0
-elf3Cal = 0
+elfCurrCal = elf1Cal = elf2Cal = elf3Cal = 0
 
 for line in lines:
-    if line == "" or line == "\n":
-        if elfList[elfIndex] > elf1Cal:
-            elf2Cal = elf1Cal
-            elf1Cal = elfList[elfIndex]
-        elif elfList[elfIndex] > elf2Cal:
-            elf3Cal = elf2Cal
-            elf2Cal = elfList[elfIndex]
-        elif elfList[elfIndex] > elf3Cal:
-            elf3Cal = elfList[elfIndex]
-        elfIndex += 1
-        continue
-    calorie = int(line)
-    elfList[elfIndex] += calorie
+    if line != "\n":
+        elfCurrCal += int(line)
+    else:
+        if elfCurrCal > elf1Cal:  # Current elf has most calories
+            elf2Cal = elf1Cal  # Move previous elf with most calories to second most
+            elf1Cal = elfCurrCal
+        elif elfCurrCal > elf2Cal:  # Current elf has second most calories
+            elf3Cal = elf2Cal  # Move previous elf with second most to third most
+            elf2Cal = elfCurrCal
+        elif elfCurrCal > elf3Cal:  # Current elf has third most calories
+            elf3Cal = elfCurrCal
+        elfCurrCal = 0
 print(elf1Cal + elf2Cal + elf3Cal)
