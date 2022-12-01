@@ -16,4 +16,5 @@ for line in lines:
         elif elfCurrCal > elf3Cal:  # Current elf has third most calories
             elf3Cal = elfCurrCal
         elfCurrCal = 0
-print(elf1Cal + elf2Cal + elf3Cal)
+print("Calories of top elf: " + str(elf1Cal))
+print("Calories of top 3 elfs: " + str(elf1Cal + elf2Cal + elf3Cal))
