@@ -1,6 +1,7 @@
 file = open("input.txt", "r")
 lines = file.readlines()
 
+
 elfCurrCal = elf1Cal = elf2Cal = elf3Cal = 0
 
 for line in lines:
