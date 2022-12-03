@@ -14,10 +14,10 @@ def f1(a, b):
     for char1 in b[:(int(len(b)/2))]:
         for char2 in b[int(len(b)/2):]:
             if char1 == char2:
-                if ord(char1) < 97:
-                    return a + ord(char1) - 38
+                if ord(char1) < ord("a"):
+                    return a + ord(char1) - ord("A") + 27
                 else:
-                    return a + ord(char1) - 96
+                    return a + ord(char1) - ord("a") + 1
 
 
 def f2(lines):
@@ -30,10 +30,10 @@ def f2(lines):
         for char2 in r2:
             for char3 in r3:
                 if char1 == char2 == char3:
-                    if ord(char1) < 97:
-                        return ord(char1) - 38 + f2(lines[3:])
+                    if ord(char1) < ord("a"):
+                        return ord(char1) - ord("A") + 27 + f2(lines[3:])
                     else:
-                        return ord(char1) - 96 + f2(lines[3:])
+                        return ord(char1) - ord("a") + 1 + f2(lines[3:])
 
 
 if __name__ == "__main__":
