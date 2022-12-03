@@ -28,12 +28,13 @@ def f2(lines):
     r3 = lines[2]
     for char1 in r1:
         for char2 in r2:
-            for char3 in r3:
-                if char1 == char2 == char3:
-                    if ord(char1) < ord("a"):
-                        return ord(char1) - ord("A") + 27 + f2(lines[3:])
-                    else:
-                        return ord(char1) - ord("a") + 1 + f2(lines[3:])
+            if char1 == char2:
+                for char3 in r3:
+                    if char3 == char2:
+                        if ord(char1) < ord("a"):
+                            return ord(char1) - ord("A") + 27 + f2(lines[3:])
+                        else:
+                            return ord(char1) - ord("a") + 1 + f2(lines[3:])
 
 
 if __name__ == "__main__":
