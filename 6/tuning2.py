@@ -7,11 +7,11 @@ def main():
 
 def tuning(line, ammount):
     for i in range(len(line)):
-        count = 0
+        charCount = 0
         substring = line[i:i+ammount]
-        for j in substring:
-            count += substring.count(j)
-        if count == ammount:
+        for char in substring:
+            charCount += substring.count(char)
+        if charCount <= ammount:
             return i + ammount
 
 
