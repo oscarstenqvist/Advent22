@@ -5,16 +5,6 @@ def main():
     return
 
 
-def p1(lines):
-    rightRowTrees = getTrees(lines, "row", -1)
-    leftRowTrees = getTrees(lines, "rowReverse", -1)
-    upColTrees = getTrees(lines, "col", -1)
-    downColTrees = getTrees(lines, "colReverse", -1)
-    totalTrees = list(dict.fromkeys(
-        upColTrees + downColTrees + leftRowTrees + rightRowTrees))
-    return len(totalTrees)
-
-
 def p2(lines):
     sceneList = []
     for lineIndex in range(len(lines)):
@@ -48,15 +38,6 @@ def reverseString(line):
     return line[::-1]
 
 
-def reverseStringList(lines):
-    newLines = []
-    for line in lines:
-        newLine = line[::-1]
-        newLines += [newLine]
-
-    return newLines
-
-
 def getColLines(lines):
     colLines = []
     colLines += [""]*(len(lines[0]))
@@ -66,33 +47,40 @@ def getColLines(lines):
     return colLines
 
 
-def getTrees(lines, direction, height):
-    if direction == "col" or direction == "colReverse":
-        lines = getColLines(lines)
-    if direction == "colReverse" or direction == "rowReverse":
-        lines = reverseStringList(lines)
-    currHeight = height
+def p1(lines):
     visibleTrees = []
-    for line in lines:
-        for treeHeight in line:
-            if int(treeHeight) > currHeight:
-                currHeight = int(treeHeight)
-                match direction:
-                    case "col":
-                        x = lines.index(line)
-                        y = line.index(treeHeight)
-                    case "colReverse":
-                        x = lines.index(line)
-                        y = len(line)-1-line.index(treeHeight)
-                    case "row":
-                        x = line.index(treeHeight)
-                        y = lines.index(line)
-                    case "rowReverse":
-                        x = len(line)-1-line.index(treeHeight)
-                        y = lines.index(line)
-                visibleTrees += [(x, y)]
+    linesCopy = lines.copy()
+    for direction in ["row", "rowReverse", "col", "colReverse"]:
+        lines = linesCopy
+        if direction == "col" or direction == "colReverse":
+            lines = getColLines(lines)
+        if direction == "colReverse" or direction == "rowReverse":
+            newLines = []
+            for line in lines:
+                newLine = reverseString(line)
+                newLines += [newLine]
+            lines = newLines
         currHeight = -1
-    return visibleTrees
+        for line in lines:
+            for treeHeight in line:
+                if int(treeHeight) > currHeight:
+                    currHeight = int(treeHeight)
+                    match direction:
+                        case "col":
+                            x = lines.index(line)
+                            y = line.index(treeHeight)
+                        case "colReverse":
+                            x = lines.index(line)
+                            y = len(line)-1-line.index(treeHeight)
+                        case "row":
+                            x = line.index(treeHeight)
+                            y = lines.index(line)
+                        case "rowReverse":
+                            x = len(line)-1-line.index(treeHeight)
+                            y = lines.index(line)
+                    visibleTrees += [(x, y)]
+            currHeight = -1
+    return len(list(dict.fromkeys(visibleTrees)))
 
 
 if __name__ == "__main__":
