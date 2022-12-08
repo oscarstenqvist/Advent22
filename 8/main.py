@@ -1,21 +1,57 @@
 def main():
     lines = open("input.txt", "r").read().splitlines()
-    rightRowTrees = getTrees(lines, "row")
-    leftRowTrees = getTrees(lines, "rowReverse")
-    upColTrees = getTrees(lines, "col")
-    downColTrees = getTrees(lines, "colReverse")
-    totalTrees = list(dict.fromkeys(
-        upColTrees + downColTrees + leftRowTrees + rightRowTrees))
-    print("Part 1: " + str(len(totalTrees)))
+    print("Part 1: " + str(p1(lines)))
+    print("Part 2: " + str(p2(lines)))
     return
 
 
-def reverse(lines):
+def p1(lines):
+    rightRowTrees = getTrees(lines, "row", -1)
+    leftRowTrees = getTrees(lines, "rowReverse", -1)
+    upColTrees = getTrees(lines, "col", -1)
+    downColTrees = getTrees(lines, "colReverse", -1)
+    totalTrees = list(dict.fromkeys(
+        upColTrees + downColTrees + leftRowTrees + rightRowTrees))
+    return len(totalTrees)
+
+
+def p2(lines):
+    sceneList = []
+    for lineIndex in range(len(lines)):
+        for treeIndex in range(len(lines[0])):
+            colLine = getColLines(lines)[treeIndex]
+            tree = lines[lineIndex][treeIndex]
+            treeRight = lines[lineIndex][treeIndex+1:]
+            treeLeft = reverseString(lines[lineIndex][:treeIndex])
+            treeDown = colLine[lineIndex+1:]
+            treeUp = reverseString(colLine[:lineIndex])
+            rightScore = findSmallTrees(treeRight, tree)
+            leftScore = findSmallTrees(treeLeft, tree)
+            downScore = findSmallTrees(treeDown, tree)
+            upScore = findSmallTrees(treeUp, tree)
+            sceneScore = rightScore * leftScore * upScore * downScore
+            sceneList += [sceneScore]
+    return max(sceneList)
+
+
+def findSmallTrees(line, treeHeight):
+    smallTrees = 1
+    for tree in line:
+        if int(tree) < int(treeHeight):
+            smallTrees += 1
+        else:
+            return smallTrees
+    return smallTrees - 1
+
+
+def reverseString(line):
+    return line[::-1]
+
+
+def reverseStringList(lines):
     newLines = []
     for line in lines:
-        newLine = ""
-        for char in line:
-            newLine = char + newLine
+        newLine = line[::-1]
         newLines += [newLine]
 
     return newLines
@@ -30,12 +66,12 @@ def getColLines(lines):
     return colLines
 
 
-def getTrees(lines, direction):
+def getTrees(lines, direction, height):
     if direction == "col" or direction == "colReverse":
         lines = getColLines(lines)
     if direction == "colReverse" or direction == "rowReverse":
-        lines = reverse(lines)
-    currHeight = -1
+        lines = reverseStringList(lines)
+    currHeight = height
     visibleTrees = []
     for line in lines:
         for treeHeight in line:
@@ -43,17 +79,18 @@ def getTrees(lines, direction):
                 currHeight = int(treeHeight)
                 match direction:
                     case "col":
-                        visibleTrees += [(lines.index(line),
-                                          line.index(treeHeight))]
+                        x = lines.index(line)
+                        y = line.index(treeHeight)
                     case "colReverse":
-                        visibleTrees += [(lines.index(line),
-                                          len(line)-1-line.index(treeHeight))]
+                        x = lines.index(line)
+                        y = len(line)-1-line.index(treeHeight)
                     case "row":
-                        visibleTrees += [(line.index(treeHeight),
-                                          lines.index(line))]
+                        x = line.index(treeHeight)
+                        y = lines.index(line)
                     case "rowReverse":
-                        visibleTrees += [(len(line)-1 -
-                                          line.index(treeHeight), lines.index(line))]
+                        x = len(line)-1-line.index(treeHeight)
+                        y = lines.index(line)
+                visibleTrees += [(x, y)]
         currHeight = -1
     return visibleTrees
 
