@@ -13,11 +13,12 @@ class Folder:
 
 
 def main():
-    lines = open("tinput.txt", "r").read().splitlines()
+    lines = open("input.txt", "r").read().splitlines()
     folders = initFolder(None, None, lines)
-    for folder in folders:
+    '''for folder in folders:
         for subfolder in folder.subFolders:
             folder.size += subfolder.size
+    '''
     print(folders)
 
 
@@ -27,7 +28,8 @@ def initFolder(folder, folderParent, lines):
         if line[0] == "$":
             if line[2] == "c":
                 if line[5] == ".":
-                    print("How to go back recursivly?")
+                    pass
+                    #print("How to go back recursivly?")
                     # return initFolder(folderParent, folderParent.parent, lines[index+1:])
                 else:
                     if folder == None:
