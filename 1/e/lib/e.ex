@@ -6,21 +6,12 @@ defmodule E do
   end
   def p2 do
     input = prepInput("input.txt")
-    output = popScoreboard(input, Enum.with_index([0,0,0]))
-    output = Enum.map(output, fn(x) -> Integer.to_string(x) end)
-    IO.puts("Part 2: " <> output)
-  end
-
-  def popScoreboard(input, output) do
-    Enum.reduce(input, output, fn x, acc -> Enum.map(acc, fn y ->
-      elem(y, 0) = if x > elem(y,0) do
-        popScoreboard(elem(y, 0), Enum.slice(acc, elem(y,1)+1..-1))
-        x
-      else
-        elem(y,0)
-      end
-    end) end)
-    output
+    max1 = Enum.max(input)
+    input = Enum.reject(input, fn x -> x == max1 end)
+    max2 = Enum.max(input)
+    input = Enum.reject(input, fn x -> x == max2 end)
+    max3 = Enum.max(input)
+    IO.puts("Part 2: " <> Integer.to_string(max1+max2+max3))
   end
 
   def prepInput(fileName) do
