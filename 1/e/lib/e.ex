@@ -14,7 +14,7 @@ defmodule E do
   def popScoreboard(input, output) do
     Enum.reduce(input, output, fn x, acc -> Enum.map(acc, fn y ->
       elem(y, 0) = if x > elem(y,0) do
-        popScoreboard(elem(y, 0), Enum.slice(acc, elemn(y,0)+1..-1))
+        popScoreboard(elem(y, 0), Enum.slice(acc, elemn(y,1)+1..-1))
         x
       else
         elem(y,0)
