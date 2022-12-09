@@ -1,25 +1,34 @@
 defmodule E do
   def p1 do
-    input = File.read!("input.txt")
-    input = String.split(input, "\n")
-    input = Enum.chunk_by(input, fn(x) -> x == "" end)
-    input = Enum.filter(input, fn(x) -> x != [""] end)
-    input = Enum.map(input, fn(x) -> Enum.map(x, fn(y) -> String.to_integer(y) end) end)
-    input = Enum.map(input, fn(x) -> Enum.sum(x) end)
+    input = prepInput("input.txt")
     input = Enum.max(input)
     IO.puts("Part 1: " <> Integer.to_string(input))
   end
   def p2 do
-    input = File.read!("tinput.txt")
+    input = prepInput("input.txt")
+    output = popScoreboard(input, Enum.with_index([0,0,0]))
+    output = Enum.map(output, fn(x) -> Integer.to_string(x) end)
+    IO.puts("Part 2: " <> output)
+  end
+
+  def popScoreboard(input, output) do
+    Enum.reduce(input, output, fn x, acc -> Enum.map(acc, fn y ->
+      elem(y, 0) = if x > elem(y,0) do
+        popScoreboard(elem(y, 0), Enum.slice(acc, curr+1..-1))
+        x
+      else
+        elem(y,0)
+      end
+    end) end)
+    output
+  end
+
+  def prepInput(fileName) do
+    input = File.read!(fileName)
     input = String.split(input, "\n")
     input = Enum.chunk_by(input, fn(x) -> x == "" end)
     input = Enum.filter(input, fn(x) -> x != [""] end)
     input = Enum.map(input, fn(x) -> Enum.map(x, fn(y) -> String.to_integer(y) end) end)
     input = Enum.map(input, fn(x) -> Enum.sum(x) end)
-    input = Enum.reduce(input, [0,0,0], fn x, acc ->
-      if x > acc[0], do: acc = [x,acc[0],acc[1]], else: if x > acc[1], do: acc = [acc[0], x, acc[1]], else:
-      if x > acc[2], do: acc = [acc[0], acc[1], x]
-    end) #Not working
-    IO.puts("Part 2: " <> Integer.to_string(input))
   end
 end
