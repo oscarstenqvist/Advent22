@@ -2,8 +2,9 @@ defmodule E do
   def p1 do
     elfTupleList = makeElfMapSets()
     Enum.reduce(elfTupleList, 0, fn elfTup, acc ->
-      if MapSet.subset?(elem(elfTup, 0), elem(elfTup, 1)) or
-      MapSet.subset?(elem(elfTup, 1), elem(elfTup, 0)) do
+      {elf1Set, elf2Set} = elfTup
+      if MapSet.subset?(elf1Set, elf2Set) or
+      MapSet.subset?(elf2Set, elf1Set) do
         acc + 1
       else
         acc
@@ -14,7 +15,8 @@ defmodule E do
   def p2 do
     elfTupleList = makeElfMapSets()
     Enum.reduce(elfTupleList, 0, fn elfTup, acc ->
-      if Enum.count(MapSet.intersection(elem(elfTup, 0), elem(elfTup, 1))) > 0 do
+      {elf1Set, elf2Set} = elfTup
+      if Enum.count(MapSet.intersection(elf1Set, elf2Set)) > 0 do
         acc + 1
       else
         acc
@@ -30,10 +32,7 @@ defmodule E do
       line = Enum.map(line, fn char ->
         String.to_integer(char)
       end)
-      elf1Start = Enum.at(line, 0)
-      elf1End = Enum.at(line, 1)
-      elf2Start = Enum.at(line, 2)
-      elf2End = Enum.at(line, 3)
+      [elf1Start, elf1End, elf2Start, elf2End] = line
       {MapSet.new(elf1Start..elf1End), MapSet.new(elf2Start..elf2End)}
     end)
   end
