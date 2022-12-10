@@ -25,4 +25,21 @@ defmodule E do
       end
     end)
   end
+  def p2 do
+    input = File.read!("../input.txt") |> String.split("\n") |>
+    Enum.map(fn line -> String.graphemes(line)end) |> Enum.chunk_every(3)
+    Enum.reduce(input, 0, fn chunk, acc ->
+      set1 = MapSet.new(Enum.at(chunk, 0))
+      set2 = MapSet.new(Enum.at(chunk, 1))
+      set3 = MapSet.new(Enum.at(chunk, 2))
+      intersect1 = MapSet.intersection(set1, set2)
+      intersect2 = MapSet.intersection(intersect1, set3)
+      sameAscii = :binary.first(Enum.at(MapSet.to_list(intersect2), 0))
+      if sameAscii > 96 do
+        acc + sameAscii - 96
+      else
+        acc + sameAscii - 38
+      end
+    end)
+  end
 end
