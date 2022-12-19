@@ -17,6 +17,22 @@ defmodule E do
     end)
   end
 
+  def p2 do
+    {stacks, lines} = setup()
+    stacks = Enum.reduce(lines, stacks, fn line, acc ->
+      [moveAmmount, reduceIndex, increaseIndex] = line
+      reduceStack = Enum.at(acc, reduceIndex)
+      increaseStack = Enum.at(acc, increaseIndex)
+      {reduceStack, reduceSplit} = Enum.split(reduceStack, length(reduceStack)-moveAmmount)
+      increaseStack = increaseStack ++ reduceSplit
+      acc = List.replace_at(acc, reduceIndex, reduceStack)
+      List.replace_at(acc, increaseIndex, increaseStack)
+    end)
+    Enum.map(stacks, fn stack ->
+      IO.write(Enum.at(stack, -1))
+    end)
+  end
+
   def setup do
     stack0 = []
     stack1 = ["H", "T", "Z", "D"]
