@@ -1,49 +1,90 @@
-class Folder:
+import math
+
+
+class Dir:
     def __init__(self, name, parent):
         self.name = name
         self.parent = parent
-        self.subFolders = []
+        self.subdir = []
         self.size = 0
 
     def __str__(self):
-        return "(" + self.name + ":" + str(self.size) + str(self.subFolders) + ")"
+        return "(" + self.name + ", Size: " + str(self.size) + ", Subdir: " + str(self.subdir) + ")"
 
     def __repr__(self):
         return str(self)
 
+    def getSubdir(self, nodeName):
+        for dir in self.subdir:
+            if dir.name == nodeName:
+                return dir
+
+    def show(self):
+        print(self)
+        print()
+        if len(self.subdir) == 0:
+            return
+        for dir in self.subdir:
+            dir.show()
+
 
 def main():
     lines = open("input.txt", "r").read().splitlines()
-    folders = initFolder(None, None, lines)
-    '''for folder in folders:
-        for subfolder in folder.subFolders:
-            folder.size += subfolder.size
-    '''
-    print(folders)
+    root = setup(lines)
+    totalSize(root)
+    print("Part 1: " + str(countsmallDirSize(root, 0)))
+    availSpace = 70000000 - root.size
+    needSpace = 30000000 - availSpace
+    infDir = Dir("INF", None)
+    infDir.size = math.inf
+    print("Part 2: " + str(findSmallBig(root, needSpace, infDir).size))
 
 
-def initFolder(folder, folderParent, lines):
-    for index in range(len(lines)):
-        line = lines[index]
-        if line[0] == "$":
-            if line[2] == "c":
-                if line[5] == ".":
-                    pass
-                    #print("How to go back recursivly?")
-                    # return initFolder(folderParent, folderParent.parent, lines[index+1:])
-                else:
-                    if folder == None:
-                        folder = Folder(line[5:], folderParent)
-                    else:
-                        return [folder] + initFolder(None, folder, lines[index:])
-            else:
-                continue
-        elif line[:3] == "dir":
-            searchIndex = lines.index("$ cd " + line[4:])
-            folder.subFolders += initFolder(None, folder, lines[searchIndex:])
-        else:
-            folder.size += int(line[:line.index(" ")])
-    return []
+def findSmallBig(node, needSpace, curr):
+    if curr.size > node.size > needSpace:
+        curr = node
+    for dir in node.subdir:
+        curr = findSmallBig(dir, needSpace, curr)
+    return curr
+
+
+def countsmallDirSize(node, n):
+    if node.size < 100000:
+        n += node.size
+    for dir in node.subdir:
+        n = countsmallDirSize(dir, n)
+    return n
+
+
+def totalSize(node):
+    if len(node.subdir) == 0:
+        return node.size
+    size = node.size
+    for dir in node.subdir:
+        size += totalSize(dir)
+    node.size = size
+    return size
+
+
+def setup(lines):
+    startNode = cwdNode = Dir("/", None)
+    for line in lines[1:]:
+        match line[0]:
+            case "$":
+                match line[2]:
+                    case "c":
+                        match line[5]:
+                            case ".":
+                                cwdNode = cwdNode.parent
+                            case _:
+                                cwdNode = cwdNode.getSubdir(line[5:])
+                    case "l":
+                        pass
+            case "d":
+                cwdNode.subdir += [Dir(line[4:], cwdNode)]
+            case _:
+                cwdNode.size += int(line[:line.find(" ")])
+    return startNode
 
 
 if __name__ == "__main__":
