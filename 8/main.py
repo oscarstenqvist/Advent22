@@ -1,6 +1,6 @@
 def main():
     lines = open("input.txt", "r").read().splitlines()
-    print("Part 1: " + str(p1(lines)))
+    #print("Part 1: " + str(p1(lines)))
     print("Part 2: " + str(p2(lines)))
     return
 
@@ -11,9 +11,9 @@ def p2(lines):
         for treeIndex in range(len(lines[0])):
             colLine = getColLines(lines)[treeIndex]
             tree = lines[lineIndex][treeIndex]
-            treeRight = lines[lineIndex][treeIndex+1:]
+            treeRight = lines[lineIndex][treeIndex + 1:]
             treeLeft = reverseString(lines[lineIndex][:treeIndex])
-            treeDown = colLine[lineIndex+1:]
+            treeDown = colLine[lineIndex + 1:]
             treeUp = reverseString(colLine[:lineIndex])
             rightScore = findSmallTrees(treeRight, tree)
             leftScore = findSmallTrees(treeLeft, tree)
@@ -40,7 +40,7 @@ def reverseString(line):
 
 def getColLines(lines):
     colLines = []
-    colLines += [""]*(len(lines[0]))
+    colLines += [""] * (len(lines[0]))
     for line in lines:
         for index in range(len(line)):
             colLines[index] += line[index]
@@ -71,12 +71,12 @@ def p1(lines):
                             y = line.index(treeHeight)
                         case "colReverse":
                             x = lines.index(line)
-                            y = len(line)-1-line.index(treeHeight)
+                            y = len(line) - 1 - line.index(treeHeight)
                         case "row":
                             x = line.index(treeHeight)
                             y = lines.index(line)
                         case "rowReverse":
-                            x = len(line)-1-line.index(treeHeight)
+                            x = len(line) - 1 - line.index(treeHeight)
                             y = lines.index(line)
                     visibleTrees += [(x, y)]
             currHeight = -1
